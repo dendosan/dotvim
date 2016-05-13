@@ -1,8 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/Users/elliotd/Documents/core-spring-3.2.b.RELEASE/workspace/invoices/.settings'
-let g:netrw_dirhist_2='/opt/eclipse/readme'
-let g:netrw_dirhist_3='/Users/elliotd/Documents/workspace/.settings'
-let g:netrw_dirhist_4='/Users/elliotd/Documents/workspace/BOA_35/src/com/cisco/conductorapp/billingadaptor/web/rpc/boss/.svn'
-let g:netrw_dirhist_5='/Applications/Eclipse Mars.app/Contents/Eclipse/configuration/org.eclipse.osgi/350/data/-16397447'
-let g:netrw_dirhist_6='/Users/elliotd/.vim'
