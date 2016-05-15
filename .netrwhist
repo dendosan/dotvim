@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/Users/elliotd/Documents/ruby/password_generator/lib'
+let g:netrw_dirhist_2='/Users/elliotd/Documents/ruby/password_generator/test'
+let g:netrw_dirhist_3='/Users/elliotd/Documents/ruby/password_generator/bin'
+let g:netrw_dirhist_4='/Users/elliotd/Documents/ruby/password_generator/lib'
+let g:netrw_dirhist_5='/Users/elliotd/Documents/ruby/password_generator'
+let g:netrw_dirhist_6='/Users/elliotd/Documents/ruby/password_generator/test'
+let g:netrw_dirhist_7='/Users/elliotd/Documents/ruby/password_generator/lib'
