@@ -7,26 +7,23 @@ syntax on
 filetype plugin indent on
 
 set exrc
-au BufWritePost .vimrc so $MYVIMRC
+
+" Source the vimrc file after saving it
+if has("autocmd")
+    autocmd bufwritepost .vimrc source $MYVIMRC
+endif
+
+" edit this file by typing 'space'V
+nnoremap <leader>V :e $MYVIMRC<cr>
 
 let mapleader = " "
 
+" CtrlP settings
+let g:ctrlp_match_window = 'bottom,order:ttb'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
-hi def link CtrlPMatch CursorLine
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_switch_buffer = 'Et'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git\|node_modules\|bin\|\.hg\|\.svn\|build\|log\|resources\|coverage\|doc\|tmp\|public/assets\|vendor\|Android',
-  \ 'file': '\.jpg$\|\.exe$\|\.so$\|tags$\|\.dll$'
-  \ }
-nnoremap <C-b> :CtrlPBuffer<cr>
-" CtrlP Delete
-call ctrlp_bdelete#init()
-" CtrlP Funky
-let g:ctrlp_extensions = ['funky']
-let g:ctrlp_funky_multi_buffers = 1
-
-set hlsearch                    " highlight the search
 set ls=2                        " show a status line even if there's only one window
 
 " Improve vim's scrolling speed
@@ -71,20 +68,22 @@ set history=100                 " a ton of history
 
 
 " Whitespace
-set tabstop=2 shiftwidth=2	" a tab is two spaces
-set expandtab			" use spaces, not tabs
+set tabstop=2 shiftwidth=2	    " a tab is two spaces
+set expandtab			              " use spaces, not tabs
 
 " Searching
-set incsearch                   " incremental searching
-set ignorecase                  " searches are case insensitive...
-set smartcase                   " ... unless they contain at least one capital letter
-set scrolloff=0                 " keep a 5 line padding when moving the cursor
+set incsearch                       " incremental searching
+set hlsearch                        " highlight the search
+nnoremap <leader>/ :nohlsearch<CR>  " turn off search highlight
+set ignorecase                      " searches are case insensitive...
+set smartcase                       " ... unless they contain at least one capital letter
+set scrolloff=0                     " keep a 5 line padding when moving the cursor
 
 " C-c send enter in insert mode
 inoremap <C-c> <Esc>
 
 " Expand %% to current directory
-" " http://vimcasts.org/e/14
+" http://vimcasts.org/e/14
 cnoremap %% <C-R>=expand('%')<cr>
 
 " Switch windows with control-<char> instead of control-w+<char>
@@ -93,12 +92,10 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-nnoremap <leader><leader> :b#<cr>
-nnoremap <leader>V :e $MYVIMRC<cr>
+nnoremap <leader><leader> :b#<cr>     " hitting 'space' twice switches buffers
 
-" remove search highlighting
-nnoremap <leader>h :noh<cr>
-
+" Fast saving
+nmap <leader>w :w!<cr>
 
 function! Carousel()
 	for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
