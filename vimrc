@@ -13,10 +13,10 @@ if has("autocmd")
     autocmd bufwritepost .vimrc source $MYVIMRC
 endif
 
+let mapleader = " "
+
 " edit this file by typing 'space'V
 nnoremap <leader>V :e $MYVIMRC<cr>
-
-let mapleader = " "
 
 " CtrlP settings
 let g:ctrlp_match_window = 'bottom,order:ttb'
