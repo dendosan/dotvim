@@ -13,6 +13,8 @@ if has("autocmd")
     autocmd bufwritepost .vimrc source $MYVIMRC
 endif
 
+colorscheme railscasts
+
 let mapleader = " "
 
 " edit this file by typing 'space'V
@@ -111,5 +113,5 @@ function! Carousel()
 	endfor
 endfunction
 
-map <silent> <Leader>tc :call Carousel()<cr>
+map <silent> <leader>tc :call Carousel()<cr>
 
