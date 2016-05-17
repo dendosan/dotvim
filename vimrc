@@ -13,7 +13,7 @@ if has("autocmd")
     autocmd bufwritepost .vimrc source $MYVIMRC
 endif
 
-colorscheme railscasts
+colorscheme railscasts2
 
 let mapleader = " "
 
