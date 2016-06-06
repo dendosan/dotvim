@@ -25,6 +25,12 @@ let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+"let g:ctrlp_max_files=0
+"let g:ctrlp_max_depth=40
+
+nnoremap <leader>f :CtrlPFunky<Cr>
+" Initialise list by a word under cursor
+nnoremap <leader>u :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 
 set ls=2                        " show a status line even if there's only one window
 
@@ -94,10 +100,11 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-nnoremap <leader><leader> :b#<cr>     " hitting 'space' twice switches buffers
+nnoremap <leader><leader> :bn<cr>     " hitting 'space' twice switches buffers
 
 " Fast saving
 nmap <leader>w :w!<cr>
+nmap <leader>r :! clear; ruby %<CR>
 
 function! Carousel()
 	for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
