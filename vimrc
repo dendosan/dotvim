@@ -15,9 +15,9 @@ endif
 
 colorscheme railscasts2
 
-let mapleader = " "
+let mapleader = ","
 
-" edit this file by typing 'space'V
+" edit this file by typing ','V
 nnoremap <leader>V :e $MYVIMRC<cr>
 
 " CtrlP settings
@@ -39,6 +39,7 @@ set ttyfast
 set ttyscroll=3
 set lazyredraw
 
+set wildmode=longest,list,full
 set wildmenu                    " show completion on the mode-line
 set linespace=0                 " number of pixels between the lines
 set splitright                  " open vertical splits on the right
@@ -74,7 +75,6 @@ set vb                          " disable alert sound
 set showcmd                     " display incomplete commands
 set history=100                 " a ton of history
 
-
 " Whitespace
 set tabstop=2 shiftwidth=2	    " a tab is two spaces
 set expandtab			              " use spaces, not tabs
@@ -100,7 +100,7 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-nnoremap <leader><leader> :bn<cr>     " hitting 'space' twice switches buffers
+nnoremap <leader><leader> :bn<cr>     " hitting leader twice switches buffers
 
 " Fast saving
 nmap <leader>w :w!<cr>
