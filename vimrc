@@ -21,6 +21,10 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'bling/vim-airline'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tomasr/molokai'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-rails'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -40,10 +44,10 @@ let g:UltiSnipsJumpBackwardTrigger="<S-C-k>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
-
 "set background=dark
 "colorscheme solarized
-colorscheme molokai
+"colorscheme molokai
+colorscheme railscasts2
 
 let mapleader = ","
 
@@ -52,6 +56,25 @@ nnoremap <leader>V :e $MYVIMRC<cr>
 
 "NERDTree Settings
 nmap <leader>nt :NERDTreeToggle<CR>
+
+" CtrlP settings
+let g:ctrlp_match_window = 'bottom,order:ttb'
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+"let g:ctrlp_max_files=0
+"let g:ctrlp_max_depth=40
+
+nnoremap <leader>f :CtrlPFunky<Cr>
+" Initialise list by a word under cursor
+nnoremap <leader>u :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+
+" POWERLINE
+set rtp+=/Users/elliotd/miniconda2/lib/python2.7/site-packages/powerline/bindings/vim/
+set laststatus=2
+set showtabline=1
+set t_Co=256
+
 
 set ls=2                        " show a status line even if there's only one window
 
@@ -72,7 +95,6 @@ set nowritebackup               " don't make a backup before overwriting a file
 set noswapfile                  " no swap files
 set hidden                      " hide buffers when abandoned
 
-
 " Time out on key codes but not mappings
 set notimeout
 set ttimeout
@@ -80,6 +102,13 @@ set ttimeoutlen=100
 
 " Auto-reload buffers when files are changed on disk
 set autoread
+
+" Lines with equal indent form a fold.
+set foldmethod=indent
+set foldlevel=1
+set foldnestmax=10
+" Open all folds by default
+set nofoldenable
 
 set undofile                    " Save undo's after file closes
 set undodir=~/.vim/undo         " where to save undo histories
@@ -102,6 +131,35 @@ set ignorecase                      " searches are case insensitive...
 set smartcase                       " ... unless they contain at least one capital letter
 set scrolloff=0                     " keep a 5 line padding when moving the cursor
 
+"HTML Editing
+set matchpairs+=<:>
+
+" Treat <li> and <p> tags like the block tags they are
+let g:html_indent_tags = 'li\|p'
+
+" ================ Scrolling ========================
+
+set scrolloff=8         "Start scrolling when we're 8 lines away from margins
+set sidescrolloff=15
+set sidescroll=1
+
+"Toggle relative numbering, and set to absolute on loss of focus or insert mode
+set rnu
+function! ToggleNumbersOn()
+    set nu!
+    set rnu
+endfunction
+function! ToggleRelativeOn()
+    set rnu!
+    set nu
+endfunction
+autocmd FocusLost * call ToggleRelativeOn()
+autocmd FocusGained * call ToggleRelativeOn()
+autocmd InsertEnter * call ToggleRelativeOn()
+autocmd InsertLeave * call ToggleRelativeOn()
+
+
+
 " C-c send enter in insert mode
 inoremap <C-c> <Esc>
 
@@ -120,4 +178,3 @@ nnoremap <leader><leader> :bn<cr>     " hitting leader twice switches buffers
 " Fast saving
 nmap <leader>w :w!<cr>
 nmap <leader>r :! clear; ruby %<CR>
-
