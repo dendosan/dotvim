@@ -1,7 +1,8 @@
 " Denton Elliott
 " Vim Defaults {{{
 set nocompatible
-set noshowmode
+set noshowmode " hide default mode text (e.g. -- INSERT -- below the statusline)
+set clipboard=unnamed
 " }}}
 " Plugin Management {{{
 syntax on
@@ -16,9 +17,8 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'ervandew/supertab'
 Plugin 'SirVer/ultisnips'
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'bling/vim-airline'
@@ -26,10 +26,13 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'tomasr/molokai'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-dispatch'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'Quramy/vim-js-pretty-template'
+Plugin 'janko-m/vim-test'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -45,18 +48,21 @@ endif
 set foldmethod=indent   " fold based on indent level
 set foldnestmax=10      " max 10 depth
 set foldenable          " don't fold files by default on open
-nnoremap <space> za
 set foldlevelstart=10    " start with fold level of 1
 " }}}
 " UltiSnips {{{
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsSnippetDirectories=["UltiSnips"]
-let g:UltiSnipsSnippetDir="~/.vim"
-let g:UltiSnipsExpandTrigger="<C-k>"
-let g:UltiSnipsJumpForwardTrigger="<C-k>"
-let g:UltiSnipsJumpBackwardTrigger="<S-C-k>"
+" make YCM compatible with UltiSnips (using supertab)
+let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
+let g:SuperTabDefaultCompletionType = '<C-n>'
+ 
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsExpandTrigger='<c-j>'
+let g:UltiSnipsJumpForwardTrigger='<c-j>'
+let g:UltiSnipsJumpBackwardTrigger='<c-k>'
+let g:UltiSnipsSnippetsDir='~/.vim/UltiSnips'
 " If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsEditSplit='vertical'
 " }}}
 " Typescript settings {{{
 let g:typescript_compiler_binary = 'tsc'
@@ -74,11 +80,11 @@ autocmd FileType typescript syn clear foldBraces
 colorscheme badwolf
 " }}}
 " Leader shortcuts {{{
-let mapleader = ","
+let mapleader = " "
 
 " edit this file by typing ','V
 nnoremap <leader>V :e $MYVIMRC<cr>
-nmap <leader>nt :NERDTreeToggle<CR>
+nnoremap <leader>nt :NERDTreeToggle<CR>
 nnoremap <leader>f :CtrlPFunky<Cr>
 " Initialise list by a word under cursor
 nnoremap <leader>u :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
@@ -86,8 +92,16 @@ nnoremap <leader>/ :nohlsearch<CR>  " turn off search highlight
 nnoremap <leader><leader> :bn<cr>     " hitting leader twice switches buffers
 
 " Fast saving
-nmap <leader>w :w!<cr>
-nmap <leader>r :! clear; ruby %<CR>
+nnoremap <leader>w :w!<cr>
+nnoremap <leader>r :! clear; ruby %<CR>
+
+" Testing
+nnoremap <silent> <leader>t :TestNearest<CR>
+nnoremap <silent> <leader>T :TestFile<CR>
+nnoremap <silent> <leader>a :TestSuite<CR>
+nnoremap <silent> <leader>l :TestLast<CR>
+nnoremap <silent> <leader>g :TestVisit<CR>
+
 " }}}
 "NERDTree Settings {{{
 " }}}
@@ -96,17 +110,28 @@ let g:ctrlp_match_window = 'bottom,order:ttb'
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+" Close NERDTree window
+let g:ctrlp_dont_split = 'NERD'
 "let g:ctrlp_max_files=0
 "let g:ctrlp_max_depth=40
 
 " }}}
+"  Use ag for grep {{{
+set grepprg=ag
+" }}}
 " POWERLINE {{{
 " set rtp+=/Users/elliotd/miniconda2/lib/python2.7/site-packages/powerline/bindings/vim/
 set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim/
-" set showtabline=1
-set t_Co=256
+set showtabline=2 " show tabline event if there's only one tab
 " source /Users/elliotd/miniconda2/lib/python2.7/site-packages/powerline/bindings/vim/plugin/powerline.vim
 set laststatus=2 " show a status line even if there's only one window
+set guifont=Inconsolata-g\ for\ Powerline:h12
+let g:Powerline_symbols = 'fancy'
+set encoding=utf-8
+set t_Co=256
+set fillchars+=stl:\ ,stlnc:\
+set term=xterm-256color
+set termencoding=utf-8
 " }}}
 " Vim Proc {{{
 " set rtp+=/Users/elliotd/.vim/bundle/vimproc.vim/autoload/vimproc/
@@ -190,15 +215,12 @@ autocmd InsertLeave * call ToggleRelativeOn()
 " C-c send enter in insert mode
 inoremap <C-c> <Esc>
 
-" Expand %% to current directory
-" http://vimcasts.org/e/14
-cnoremap %% <C-R>=expand('%')<cr>
-
 " Switch windows with control-<char> instead of control-w+<char>
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
 " }}}
 " Display Hidden Chars {{{
 set list          " Display unprintable characters f12 - switches
