@@ -3,40 +3,51 @@
 set nocompatible
 set noshowmode " hide default mode text (e.g. -- INSERT -- below the statusline)
 set clipboard=unnamed
+set virtualedit=all
+set cpoptions+=$
 " }}}
 " Plugin Management {{{
-syntax on
-filetype off
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" Specify a directory for plugins
+call plug#begin('~/.vim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+" NERD tree will be loaded on the first invocation of NERDTreeToggle command
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/nerdcommenter'
+Plug 'https://github.com/mattn/webapi-vim.git'
+Plug 'Quramy/vim-js-pretty-template'
+Plug 'mxw/vim-jsx'
+Plug 'ternjs/tern_for_vim'
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !./install.py --tern-completer
+  endif
+endfunction
 
-Plugin 'ervandew/supertab'
-Plugin 'SirVer/ultisnips'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'bling/vim-airline'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'tomasr/molokai'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-dispatch'
-Plugin 'leafgarland/typescript-vim'
-Plugin 'Quramy/vim-js-pretty-template'
-Plugin 'janko-m/vim-test'
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'ervandew/supertab'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'mattn/emmet-vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'sheerun/vim-polyglot'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+" Plug 'pangloss/vim-javascript'
+" Plugin 'tpope/vim-rails'
+" Plugin 'tpope/vim-dispatch'
+" Plugin 'janko-m/vim-test'
+" Plugin 'https://github.com/shmargum/vim-sass-colors.git'
+
+ " Initialize plugin system
+call plug#end()
 
 " Source the vimrc file after saving it
 if has("autocmd")
@@ -72,38 +83,44 @@ autocmd QuickFixCmdPost    l* nested lwindow
 autocmd FileType typescript JsPreTmpl html
 autocmd FileType typescript syn clear foldBraces
 " }}}
+" Emmet settings {{{
+let g:user_emmet_leader_key='<C-y>'
+let g:user_emmet_settings = webapi#json#decode(join(readfile(expand('~/.vim/.snippets.json')), "\n"))
+" }}}
 " Color settings {{{
-"set background=dark
-"colorscheme solarized
-"colorscheme molokai
-" colorscheme railscasts2
-colorscheme badwolf
+" let g:solarized_termcolors=256
+set background=dark
+" set background=light
+" colorscheme solarized
+" colorscheme molokai
+colorscheme railscasts2
+" colorscheme badwolf
+" colorscheme goodwolf
 " }}}
 " Leader shortcuts {{{
 let mapleader = " "
 
 " edit this file by typing ','V
 nnoremap <leader>V :e $MYVIMRC<cr>
-nnoremap <leader>nt :NERDTreeToggle<CR>
-nnoremap <leader>f :CtrlPFunky<Cr>
+nnoremap <leader>nt :NERDTreeToggle<cr>
 " Initialise list by a word under cursor
-nnoremap <leader>u :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
-nnoremap <leader>/ :nohlsearch<CR>  " turn off search highlight
-nnoremap <leader><leader> :bn<cr>     " hitting leader twice switches buffers
+nnoremap <leader>u :execute 'CtrlPFunky ' . expand('<cword>')<cr>
+" turn off search highlight
+nnoremap <leader>/ :nohlsearch<cr>
+" hitting leader twice switches buffers
+nnoremap <leader><leader> :bn<cr>
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
-nnoremap <leader>r :! clear; ruby %<CR>
+nnoremap <leader>r :! clear; ruby %<cr>
 
 " Testing
-nnoremap <silent> <leader>t :TestNearest<CR>
-nnoremap <silent> <leader>T :TestFile<CR>
-nnoremap <silent> <leader>a :TestSuite<CR>
-nnoremap <silent> <leader>l :TestLast<CR>
-nnoremap <silent> <leader>g :TestVisit<CR>
+nnoremap <silent> <leader>t :TestNearest<cr>
+nnoremap <silent> <leader>T :TestFile<cr>
+nnoremap <silent> <leader>a :TestSuite<cr>
+nnoremap <silent> <leader>l :TestLast<cr>
+nnoremap <silent> <leader>g :TestVisit<cr>
 
-" }}}
-"NERDTree Settings {{{
 " }}}
 " CtrlP {{{
 let g:ctrlp_match_window = 'bottom,order:ttb'
@@ -114,7 +131,7 @@ let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 let g:ctrlp_dont_split = 'NERD'
 "let g:ctrlp_max_files=0
 "let g:ctrlp_max_depth=40
-
+nnoremap <leader>f :CtrlPFunky<cr>
 " }}}
 "  Use ag for grep {{{
 set grepprg=ag
@@ -123,20 +140,15 @@ set grepprg=ag
 " set rtp+=/Users/elliotd/miniconda2/lib/python2.7/site-packages/powerline/bindings/vim/
 set rtp+=/usr/local/lib/python2.7/site-packages/powerline/bindings/vim/
 set showtabline=2 " show tabline event if there's only one tab
+set t_Co=256
 " source /Users/elliotd/miniconda2/lib/python2.7/site-packages/powerline/bindings/vim/plugin/powerline.vim
 set laststatus=2 " show a status line even if there's only one window
 set guifont=Inconsolata-g\ for\ Powerline:h12
 let g:Powerline_symbols = 'fancy'
 set encoding=utf-8
-set t_Co=256
 set fillchars+=stl:\ ,stlnc:\
 set term=xterm-256color
 set termencoding=utf-8
-" }}}
-" Vim Proc {{{
-" set rtp+=/Users/elliotd/.vim/bundle/vimproc.vim/autoload/vimproc/
-" set rtp+=/Users/elliotd/.vim/bundle/vimproc.vim/lib/vimproc_mac.so
-" set rtp+=/Users/elliotd/.vim/bundle/vimproc.vim/plugin/vimproc.vim
 " }}}
 " Spaces, Tabs, General Config {{{
 " Improve vim's scrolling speed
@@ -149,7 +161,7 @@ set wildmenu                    " show completion on the mode-line
 set linespace=0                 " number of pixels between the lines
 set splitright                  " open vertical splits on the right
 set splitbelow                  " open the horizontal split below
-set wrap                        " wrap long lines
+" set wrap                        " wrap long lines
 set linebreak                   " break lines at word end
 set nobackup                    " don't want no backup files
 set nowritebackup               " don't make a backup before overwriting a file
@@ -182,7 +194,7 @@ set incsearch                       " incremental searching
 set hlsearch                        " highlight the search
 set ignorecase                      " searches are case insensitive...
 set smartcase                       " ... unless they contain at least one capital letter
-set scrolloff=0                     " keep a 5 line padding when moving the cursor
+"set scrolloff=0                     " keep a 5 line padding when moving the cursor
 
 "HTML Editing
 set matchpairs+=<:>
@@ -191,9 +203,9 @@ set matchpairs+=<:>
 let g:html_indent_tags = 'li\|p'
 " }}}
 " Scrolling {{{
-set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
-set sidescroll=1
+"set scrolloff=8         "Start scrolling when we're 8 lines away from margins
+"set sidescrolloff=15
+"set sidescroll=1
 " }}}
 " Line Numbering {{{
 "Toggle relative numbering, and set to absolute on loss of focus or insert mode
@@ -221,9 +233,17 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+"enable keyboard shortcuts
+let g:tern_map_keys=1
+"show argument hints
+let g:tern_show_argument_hints='on_hold'
+
 " }}}
 " Display Hidden Chars {{{
 set list          " Display unprintable characters f12 - switches
 set listchars=tab:•\ ,trail:•,extends:»,precedes:« " Unprintable chars mapping
+" }}}
+" Autocmds {{{
+autocmd FileType javascript set formatprg=prettier\ --stdin
 " }}}
 " vim:foldmethod=marker:foldlevel=0
