@@ -1,0 +1,7 @@
+{
+  "html": {
+    "snippets": {
+      "post": "div#post>h1.title+p.body"
+    }
+  }
+}
