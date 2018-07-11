@@ -13,6 +13,7 @@ call plug#begin('~/.vim/plugged')
 " Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-fugitive'
 
 Plug 'altercation/vim-colors-solarized'
 Plug 'trevordmiller/nova-vim'
@@ -55,6 +56,16 @@ Plug 'qpkorr/vim-bufkill' " Use :BD to remove buffer and keep screen open
 Plug 'vim-syntastic/syntastic' " error highlighting
 Plug 'godlygeek/tabular'
 " Plug 'ctrlpvim/ctrlp.vim'
+" post install (yarn install | npm install)
+
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" Prettier {{{
+" when running at every change you may want to disable quickfix
+let g:prettier#quickfix_enabled = 0
+let g:prettier#config#trailing_comma = 'none'
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+" }}}
 
 " Initialize plugin system
 call plug#end()
@@ -131,15 +142,23 @@ set incsearch           " incremental search
 set hlsearch            " highlight search
 set ignorecase          " ignore case while searching
 
+" ts  = 'number of spaces that <Tab> in file uses'
+" sts = 'number of spaces that <Tab> uses while editing'
+" sw  = 'number of spaces to use for (auto)indent step'
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
 
-" for html/rb/groovy/xml files, 2 spaces
+" for java/html/rb/groovy/xml files, 2 spaces
+autocmd filetype java setlocal ts=2 sw=2 expandtab
 autocmd filetype html setlocal ts=2 sw=2 expandtab
 autocmd filetype ruby setlocal ts=2 sw=2 expandtab
 autocmd filetype groovy setlocal ts=2 sw=2 expandtab
 autocmd filetype xml setlocal ts=2 sw=2 expandtab
+" for js/coffee/jade files, 3 spaces
+autocmd filetype javascript,javascript.jsx setlocal ts=3 sw=3 sts=0 expandtab
+autocmd filetype coffeescript setlocal ts=3 sw=3 sts=0 expandtab
+autocmd filetype jade setlocal ts=3 sw=3 sts=0 expandtab
 
 " augroup NeoformatAutoFormat
 "   autocmd!
@@ -150,11 +169,6 @@ autocmd filetype xml setlocal ts=2 sw=2 expandtab
 "         \--trailing-comma\ es5
 "   autocmd BufWritePre *.js,*.jsx Neoformat
 " augroup END
-
-" for js/coffee/jade files, 4 spaces
-autocmd filetype javascript,javascript.jsx setlocal ts=4 sw=4 sts=0 expandtab
-autocmd filetype coffeescript setlocal ts=4 sw=4 sts=0 expandtab
-autocmd filetype jade setlocal ts=4 sw=4 sts=0 expandtab
 
 " Improve vim's scrolling speed
 set ttyfast
@@ -266,15 +280,16 @@ augroup numbertoggle
 augroup END
 " }}}
 " Syntastic {{{
-" set statusline+=%#warningmsg#                                   "syntastic
-" set statusline+=%{SyntasticStatuslineFlag()}                    "syntastic
-" set statusline+=%*                                              "syntastic
-"
-" let g:syntastic_always_populate_loc_list = 1                    "syntastic
-" let g:syntastic_auto_loc_list = 1                               "syntastic
-" let g:syntastic_check_on_open = 1                               "syntastic
-" let g:syntastic_check_on_wq = 0                                 "syntastic
-" let g:syntastic_javascript_checkers = ['eslint']                "syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_html_tidy_exec = 'tidy5'
 " }}}
 " Tabular {{{
 
