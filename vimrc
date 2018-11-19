@@ -59,6 +59,9 @@ Plug 'godlygeek/tabular'
 " post install (yarn install | npm install)
 
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+
 " Prettier {{{
 " when running at every change you may want to disable quickfix
 let g:prettier#quickfix_enabled = 0
@@ -79,7 +82,7 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<cr>
 nnoremap <leader><leader> :bn<cr>
 nnoremap <leader>w :w!<cr>
 " Leader C is the prefix for code related mappîngs
-noremap <silent> <Leader>cc :TComment<cr>
+noremap <silent> <leader>cc :TComment<cr>
 " fzf config {{{
 let g:fzf_nvim_statusline = 0 " disable statusline overwriting
 
@@ -156,7 +159,7 @@ autocmd filetype ruby setlocal ts=2 sw=2 expandtab
 autocmd filetype groovy setlocal ts=2 sw=2 expandtab
 autocmd filetype xml setlocal ts=2 sw=2 expandtab
 " for js/coffee/jade files, 3 spaces
-autocmd filetype javascript,javascript.jsx setlocal ts=3 sw=3 sts=0 expandtab
+autocmd filetype javascript,javascript.jsx setlocal ts=2 sw=2 sts=0 expandtab
 autocmd filetype coffeescript setlocal ts=3 sw=3 sts=0 expandtab
 autocmd filetype jade setlocal ts=3 sw=3 sts=0 expandtab
 
